@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT Data</title>
+</head>
+<body>
+    <h1>センサデータ</h1>
+    <table border="1">
+        <tr><th>値</th><th>受信時間</th></tr>
+        {% for value, timestamp in data %}
+        <tr>
+            <td>{{ value }}</td>
+            <td>{{ timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
