@@ -1,18 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <title>IoT Data</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>せんせいスイッチ - 対応状況一覧</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    th {
+      background: #e0e0e0; /* ヘッダー行灰色 */
+    }
+    .status {
+      font-weight: bold;
+      border-radius: 4px;
+      padding: 3px 6px;
+      display: inline-block;
+      color: white;
+    }
+    .available { background-color: #4caf50; }  /* 対応可 */
+    .busy { background-color: #ff9800; }      /* 授業中 */
+    .absent { background-color: #f44336; }    /* 不在 */
+    #statusMessage {
+      margin-top: 10px;
+      text-align: center;
+      color: #555;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
-    <h1>センサデータ</h1>
-    <table border="1">
-        <tr><th>値</th><th>受信時間</th></tr>
-        {% for value, timestamp in data %}
-        <tr>
-            <td>{{ value }}</td>
-            <td>{{ timestamp }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+
+  <h1>せんせいスイッチ（対応状況一覧）</h1>
+
+  <table id="teacherTable">
+    <thead>
+      <tr>
+        <th>教員名</th>
+        <th>所属</th>
+        <th>研究室</th>
+        <th>対応状況</th>
+        <th>取得時刻</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for teacher, dept, room, status, ts in data %}
+      <tr>
+        <td>{{ teacher }}</td>
+        <td>{{ dept }}</td>
+        <td>{{ room }}</td>
+        <td>
+          <span class="status
+            {% if status == '対応可' %}available{% elif status == '授業中' %}busy{% elif status == '不在' %}absent{% endif %}">
+            {{ status }}
+          </span>
+        </td>
+        <td>{{ ts }}</td>
+      </tr>
+      {% endfor %}
+      {% if data|length == 0 %}
+      <tr><td colspan="5">データがありません</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div id="statusMessage">最終更新：{{ now }}</div>
+
 </body>
 </html>
