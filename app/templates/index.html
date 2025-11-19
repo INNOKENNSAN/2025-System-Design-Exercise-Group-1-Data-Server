@@ -25,7 +25,7 @@
       text-align: center;
     }
     th {
-      background: #e0e0e0;
+      background: #e0e0e0; /* ヘッダー行灰色 */
     }
     .status {
       font-weight: bold;
@@ -56,61 +56,31 @@
         <th>所属</th>
         <th>研究室</th>
         <th>対応状況</th>
+        <th>取得時刻</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td colspan="4">読み込み中...</td></tr>
+      {% for teacher, dept, room, status, ts in data %}
+      <tr>
+        <td>{{ teacher }}</td>
+        <td>{{ dept }}</td>
+        <td>{{ room }}</td>
+        <td>
+          <span class="status
+            {% if status == '対応可' %}available{% elif status == '授業中' %}busy{% elif status == '不在' %}absent{% endif %}">
+            {{ status }}
+          </span>
+        </td>
+        <td>{{ ts }}</td>
+      </tr>
+      {% endfor %}
+      {% if data|length == 0 %}
+      <tr><td colspan="5">データがありません</td></tr>
+      {% endif %}
     </tbody>
   </table>
 
-  <div id="statusMessage">最終更新：取得中...</div>
-
-  <script>
-    const API_URL = "/api/teachers"; // サーバのエンドポイント
-    const tableBody = document.querySelector("#teacherTable tbody");
-    const statusMessage = document.getElementById("statusMessage");
-
-    async function fetchData() {
-      try {
-        const response = await fetch(API_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error("データ取得失敗");
-        const data = await response.json();
-        updateTable(data);
-        const now = new Date().toLocaleString();
-        statusMessage.textContent = `最終更新：${now}（通信正常）`;
-      } catch (error) {
-        statusMessage.textContent = "現在情報を取得できません（通信エラー）";
-        console.error(error);
-      }
-    }
-
-    function updateTable(data) {
-      tableBody.innerHTML = ""; // 初期化
-      data.forEach(t => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${t.name}</td>
-          <td>${t.department}</td>
-          <td>${t.room}</td>
-          <td><span class="status ${statusClass(t.status)}">${t.status}</span></td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-    function statusClass(status) {
-      switch (status) {
-        case "対応可": return "available";
-        case "授業中": return "busy";
-        case "不在": return "absent";
-        default: return "";
-      }
-    }
-
-    // 初回ロード時と一定間隔で更新（30秒）
-    fetchData();
-    setInterval(fetchData, 30000);
-  </script>
+  <div id="statusMessage">最終更新：{{ now }}</div>
 
 </body>
 </html>
