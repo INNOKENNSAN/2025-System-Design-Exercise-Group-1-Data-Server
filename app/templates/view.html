@@ -1,0 +1,109 @@
+<!-- templates/view.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>せんせいスイッチ 閲覧画面</title>
+
+    <!-- 共通スタイル -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- 閲覧画面用スクリプト -->
+    <script src="/static/js/view.js" defer></script>
+</head>
+<body class="view">
+
+    <!-- ============================= -->
+    <!-- ヘッダ -->
+    <!-- ============================= -->
+    <header>
+        <h1>せんせいスイッチ</h1>
+        <p>
+            各先生の在室状況を確認できます。
+            検索条件を指定すると、該当する人物のみが表示されます。
+        </p>
+    </header>
+
+    <!-- ============================= -->
+    <!-- 検索 UI（設計仕様書 4.5.7.5 準拠） -->
+    <!-- ============================= -->
+    <section class="search-area">
+        <h2>検索条件</h2>
+
+        <!--
+            ※ フォーム送信は行わず、view.js が入力値を取得して
+               クライアント側で全文一致検索を行う
+        -->
+        <div class="search-fields">
+            <label>
+                氏名：
+                <input type="text" id="search-name">
+            </label>
+
+            <label>
+                学科：
+                <input type="text" id="search-department">
+            </label>
+
+            <label>
+                学年：
+                <input type="text" id="search-grade">
+            </label>
+
+            <label>
+                役割：
+                <input type="text" id="search-role">
+            </label>
+
+            <label>
+                部屋：
+                <input type="text" id="search-room">
+            </label>
+
+            <button type="button" id="search-button">
+                検索
+            </button>
+        </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- メッセージ表示 -->
+    <!-- ============================= -->
+    <section id="message-area" class="message-area">
+        <!-- view.js により動的に表示 -->
+    </section>
+
+    <!-- ============================= -->
+    <!-- 在室状況一覧（検索結果表示領域） -->
+    <!-- ============================= -->
+    <section class="table-area">
+        <table id="status-table">
+            <thead>
+                <tr>
+                    <th>氏名</th>
+                    <th>学科</th>
+                    <th>役職</th>
+                    <th>学年</th>
+                    <th>部屋</th>
+                    <th>在室状況</th>
+                    <th>更新時間</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--
+                    データ行は view.js により動的に生成される。
+                    検索条件がすべて未指定の場合は全件表示される。
+                -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ============================= -->
+    <!-- フッタ -->
+    <!-- ============================= -->
+    <footer>
+        <p>Sensei Switch Viewer</p>
+    </footer>
+
+</body>
+</html>

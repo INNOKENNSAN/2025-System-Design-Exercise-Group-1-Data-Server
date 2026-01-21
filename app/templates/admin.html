@@ -1,0 +1,89 @@
+<!-- templates/admin.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>せんせいスイッチ 管理画面</title>
+
+    <!-- 共通スタイル -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- 管理画面用スクリプト -->
+    <script src="/static/js/admin.js" defer></script>
+</head>
+<body>
+
+    <!-- ============================= -->
+    <!-- ヘッダ -->
+    <!-- ============================= -->
+    <header>
+        <h1>せんせいスイッチ 管理画面</h1>
+        <p>
+            この画面では、人物情報（氏名・学科・学年・役割・部屋）の
+            追加・編集・削除を行います。
+        </p>
+    </header>
+
+    <!-- ============================= -->
+    <!-- 操作ボタン -->
+    <!-- ============================= -->
+    <section class="controls">
+        <!-- 新規行追加 -->
+        <button id="add-row-button" type="button">
+            行を追加
+        </button>
+
+        <!-- 保存 -->
+        <button id="save-button" type="button">
+            変更を保存
+        </button>
+    </section>
+
+    <!-- ============================= -->
+    <!-- メッセージ表示領域 -->
+    <!-- ============================= -->
+    <section id="message-area" class="message-area">
+        <!-- admin.js により動的にメッセージを表示 -->
+    </section>
+
+    <!-- ============================= -->
+    <!-- 人物一覧テーブル -->
+    <!-- ============================= -->
+    <section class="table-area">
+        <table id="people-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>氏名</th>
+                    <th>学科</th>
+                    <th>学年</th>
+                    <th>役割</th>
+                    <th>部屋</th>
+                    <th>削除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--
+                    データ行は admin.js により動的に生成される。
+                    各行は以下の input 構成を想定：
+                      - data-id 属性に person_id
+                      - input[name="name"]
+                      - input[name="department"]
+                      - input[name="grade"]
+                      - input[name="role"]
+                      - input[name="room"]
+                      - checkbox[name="delete"]
+                -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ============================= -->
+    <!-- フッタ -->
+    <!-- ============================= -->
+    <footer>
+        <p>Sensei Switch Admin Panel</p>
+    </footer>
+
+</body>
+</html>
