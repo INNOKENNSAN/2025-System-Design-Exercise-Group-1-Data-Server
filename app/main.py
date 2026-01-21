@@ -57,6 +57,12 @@ app = Flask(
     template_folder="templates"  # render_template() に templates/ を使う
 )
 
+if db is not None and hasattr(db, "init_db"):
+    try:
+        db.init_db()
+    except Exception as e:
+        logging.error("DB 初期化に失敗しました: %s", e)
+
 # 起動時にログディレクトリを確保（存在チェック）。utils_log に委譲。
 if utils_log is not None and hasattr(utils_log, "ensure_log_dir_exists"):
     try:
