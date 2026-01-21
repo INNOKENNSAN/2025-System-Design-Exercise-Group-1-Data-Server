@@ -1,0 +1,159 @@
+/* templates/css/style.css */
+/*
+ * せんせいスイッチ 共通スタイル
+ * admin / view 両画面で使用する
+ */
+
+/* ============================= */
+/* 全体共通 */
+/* ============================= */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+header,
+footer {
+    background-color: #ffffff;
+    padding: 16px;
+    border-bottom: 1px solid #ccc;
+}
+
+footer {
+    border-top: 1px solid #ccc;
+    border-bottom: none;
+    margin-top: 24px;
+}
+
+h1 {
+    margin: 0 0 8px 0;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+section {
+    padding: 16px;
+}
+
+/* ============================= */
+/* 操作エリア（admin） */
+/* ============================= */
+.controls {
+    margin-bottom: 16px;
+}
+
+.controls button {
+    margin-right: 8px;
+}
+
+/* ============================= */
+/* 検索エリア（view） */
+/* ============================= */
+.search-area {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    margin-bottom: 16px;
+}
+
+.search-fields label {
+    margin-right: 12px;
+    display: inline-block;
+}
+
+.search-fields input {
+    margin-left: 4px;
+}
+
+/* ============================= */
+/* メッセージ表示 */
+/* ============================= */
+.message-area {
+    min-height: 1.2em;
+    margin-bottom: 12px;
+}
+
+/* ============================= */
+/* テーブル */
+/* ============================= */
+.table-area {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #eeeeee;
+}
+
+/* ============================= */
+/* フォーム部品 */
+/* ============================= */
+input[type="text"] {
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+/* ============================= */
+/* 在室状況表示（修正箇所） */
+/* ============================= */
+
+/*
+ * 在室状況セル
+ * table-cell の性質を維持しつつ、
+ * 中央配置を行うためのクラス
+ */
+.status-cell {
+    text-align: center;        /* 横方向中央揃え */
+    vertical-align: middle;    /* 縦方向中央揃え */
+}
+
+/*
+ * 在室状況バッジ
+ * span 要素を用いてセル内に表示する
+ */
+.status-ok,
+.status-ng,
+.status-unknown {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+/* 対応可：緑 */
+.status-ok {
+    background-color: #4caf50;
+}
+
+/* 対応不可：赤 */
+.status-ng {
+    background-color: #f44336;
+}
+
+/* 未設定：グレー */
+.status-unknown {
+    background-color: #9e9e9e;
+}

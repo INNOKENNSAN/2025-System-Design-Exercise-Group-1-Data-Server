@@ -67,7 +67,7 @@
         <td>{{ room }}</td>
         <td>
           <span class="status
-            {% if status == '対応可' %}available{% elif status == '授業中' %}busy{% elif status == '不在' %}absent{% endif %}">
+            {% if status == '在室' %}available{% elif status == '授業中' %}busy{% elif status == '不在' %}absent{% endif %}">
             {{ status }}
           </span>
         </td>
