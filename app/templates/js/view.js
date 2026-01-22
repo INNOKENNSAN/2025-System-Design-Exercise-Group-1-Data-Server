@@ -7,6 +7,14 @@
 
 let allStatusData = []; // 取得した全データを保持
 
+let currentSearch = { // 検索データを保持
+    name: "",
+    department: "",
+    grade: "",
+    role: "",
+    room: ""
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     // 初期表示（全件）
     loadStatusData();
@@ -14,12 +22,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // 検索ボタン押下時の処理
     document.getElementById("search-button")
         .addEventListener("click", applySearch);
+
+    // ★ 5秒ごとに自動更新
+    setInterval(() => {
+        loadStatusData(true);
+    }, 5000);
 });
 
 /**
  * 在室状況データを API から取得する
+ * @param {boolean} isAuto 自動更新かどうか
  */
-function loadStatusData() {
+function loadStatusData(isAuto = false) {
     fetch("/api/status_view")
         .then(response => response.json())
         .then(data => {
@@ -28,28 +42,42 @@ function loadStatusData() {
             }
 
             allStatusData = data.records.sort((a, b) => a.id - b.id);
-            renderTable(allStatusData);
 
+            // ★ 検索条件がある場合は再適用
+            if (hasActiveSearch()) {
+                applySearch(true);
+            } else {
+                renderTable(allStatusData);
+                if (!isAuto) {
+                    showMessage("すべての対応状況を表示しています");
+                }
+            }
         })
         .catch(() => {
-            showMessage("在室状況の取得に失敗しました", true);
+            if (!isAuto) {
+                showMessage("在室状況の取得に失敗しました", true);
+            }
         });
 }
 
 /**
  * 検索条件を取得し、全文一致で絞り込みを行う
+ * @param {boolean} silent メッセージ非表示
  */
-function applySearch() {
-    const name = document.getElementById("search-name").value.trim();
-    const department = document.getElementById("search-department").value.trim();
-    const grade = document.getElementById("search-grade").value.trim();
-    const role = document.getElementById("search-role").value.trim();
-    const room = document.getElementById("search-room").value.trim();
+function applySearch(silent = false) {
+    currentSearch.name = document.getElementById("search-name").value.trim();
+    currentSearch.department = document.getElementById("search-department").value.trim();
+    currentSearch.grade = document.getElementById("search-grade").value.trim();
+    currentSearch.role = document.getElementById("search-role").value.trim();
+    currentSearch.room = document.getElementById("search-room").value.trim();
 
-    // すべて未指定の場合は全件表示
+    const { name, department, grade, role, room } = currentSearch;
+
     if (!name && !department && !grade && !role && !room) {
         renderTable(allStatusData);
-        showMessage("すべての対応状況を表示しています");
+        if (!silent) {
+            showMessage("すべての対応状況を表示しています");
+        }
         return;
     }
 
@@ -62,13 +90,14 @@ function applySearch() {
         return true;
     });
 
-
     renderTable(filtered);
 
-    if (filtered.length === 0) {
-        showMessage("該当する人物が見つかりません", true);
-    } else {
-        showMessage(`${filtered.length} 件の結果が見つかりました`);
+    if (!silent) {
+        if (filtered.length === 0) {
+            showMessage("該当する人物が見つかりません", true);
+        } else {
+            showMessage(`${filtered.length} 件の結果が見つかりました`);
+        }
     }
 }
 
@@ -131,6 +160,13 @@ function renderTable(data) {
         return date.toLocaleString("ja-JP");
     }
 
+}
+/**
+ * 検索中か判定する補助関数
+ */
+function hasActiveSearch() {
+    const { name, department, grade, role, room } = currentSearch;
+    return !!(name || department || grade || role || room);
 }
 
 /**
