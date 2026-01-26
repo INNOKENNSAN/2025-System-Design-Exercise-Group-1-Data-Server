@@ -4,6 +4,10 @@
 〇ファイル構成(予定)
 sensei-switch/
 ├─ app/
+│  ├─ logs
+│  │  ├─ format_error.log
+│  │  ├─ unregistered_id.log
+│  │  └─status_change.log
 │  ├─ main.py
 │  ├─ handlers_status.py
 │  ├─ api_admin_logic.py
@@ -19,9 +23,10 @@ sensei-switch/
 │       └─ js/
 │          ├─ admin.js
 │          └─ view.js
-├─ .gignore
+├─ .gitignore
 ├─ Dockerfile
 ├─ docker-compose.yml
+├─ entrypoint.sh
 └─ README.md
 
 

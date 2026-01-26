@@ -20,6 +20,13 @@ import logging
 import re
 
 
+
+# ★ モジュールロード時に一度だけ保証
+try:
+    utils_log.ensure_log_dir_exists()
+except Exception:
+    logging.exception("log directory initialization failed")
+
 # ログファイル名（設計仕様書の規定に準拠）
 FORMAT_ERROR_LOG = "format_error.log"
 UNREGISTERED_ID_LOG = "unregistered_id.log"

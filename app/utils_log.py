@@ -10,24 +10,24 @@
 # ログ内容の生成やエラー制御は呼び出し側に委ねる。
 
 import os
-import logging
 from datetime import datetime
 from typing import Optional
 
 
 # デフォルトのログディレクトリ
-DEFAULT_LOG_DIR = "/var/log/sensei_switch"
-
-# 環境変数名
-ENV_LOG_DIR = "SENSEI_LOG_DIR"
-
+# プロジェクト内部にログを保存
+DEFAULT_LOG_DIR = os.path.join(
+    os.path.dirname(__file__),
+    "logs"
+)
 
 def _get_log_dir() -> str:
     """
     使用するログディレクトリを返す。
-    環境変数があればそれを優先する。
+    今回はデフォルトディレクトリ
+    ※正直今回はいらない
     """
-    return os.environ.get(ENV_LOG_DIR, DEFAULT_LOG_DIR)
+    return DEFAULT_LOG_DIR
 
 
 def ensure_log_dir_exists() -> None:
@@ -74,37 +74,13 @@ def write_log_line(filename: str, line: str) -> None:
     if "/" in filename or "\\" in filename:
         raise ValueError("filename にパス区切り文字を含めることはできません")
 
+    # ★ 追加：必ずログディレクトリを初期化
+    ensure_log_dir_exists()
+
     log_dir = _get_log_dir()
     log_path = os.path.join(log_dir, filename)
 
-    # 追記モードで書き込み
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(line + "\n")
         f.flush()
         os.fsync(f.fileno())
-
-# -------------------------------------------------------------
-# 管理系ログ出力（設計 4.6 節）
-# -------------------------------------------------------------
-def log_info(message: str) -> None:
-    """
-    管理系 INFO ログを出力する。
-    """
-    try:
-        ts = get_current_timestamp()
-        line = f"{ts} INFO {message}"
-        write_log_line("admin.log", line)
-    except Exception:
-        logging.exception("log_info failed")
-
-
-def log_error(message: str) -> None:
-    """
-    管理系 ERROR ログを出力する。
-    """
-    try:
-        ts = get_current_timestamp()
-        line = f"{ts} ERROR {message}"
-        write_log_line("admin.log", line)
-    except Exception:
-        logging.exception("log_error failed")
