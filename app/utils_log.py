@@ -21,22 +21,13 @@ DEFAULT_LOG_DIR = os.path.join(
     "logs"
 )
 
-def _get_log_dir() -> str:
-    """
-    使用するログディレクトリを返す。
-    今回はデフォルトディレクトリ
-    ※正直今回はいらない
-    """
-    return DEFAULT_LOG_DIR
-
-
 def ensure_log_dir_exists() -> None:
     """
     ログ保存用ディレクトリを作成・確認する。
     - 既に存在する場合は何もしない
     - 作成できない、または書き込み不可の場合は例外を送出する
     """
-    log_dir = _get_log_dir()
+    log_dir = DEFAULT_LOG_DIR
 
     # ディレクトリ作成（存在していてもエラーにしない）
     os.makedirs(log_dir, exist_ok=True)
