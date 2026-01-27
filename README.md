@@ -1,64 +1,141 @@
-# 2025--1-
+# 2025年度 システムデザイン演習 1班 データサーバー
+
+## 概要
+
+本リポジトリは，2025年度システムデザイン演習において 1 班が開発する  
+教員・学生向け在室状況確認システム **「せんせいスイッチ」** の  
+**データ管理および配信を担うサーバ** を公開するものである。
+
+「せんせいスイッチ」は，教員および学生が携帯する入力・発信機を用いて，
+
+- 在室状況の判定  
+- 対応可否（対応可／対応不可）の入力  
+
+を行い，それらを統合した **対応状況** を  
+教員・学生双方がリアルタイムに確認できることを目的としたシステムである。
+
+本リポジトリで公開するサーバでは，教員および学生の対応状況・属性情報を  
+ブラウザ上で一元管理し，リアルタイムに閲覧・更新できるようにする。
+
+---
+
+## システムの特徴
+
+- 表示する対応状況は  
+  **「対応可 / 対応不可」** の 2 種類
+- 教員だけでなく **学生の対応状況も含めて一覧表示**
+- ページ内の情報量増加に対応するため **検索機能を実装**
+- 入力・発信機からは  
+  **居室単位で複数人分の対応状況を一括送信** 可能
+- 管理者用サイトから  
+  所属者データ（教員・学生）の編集が可能
+
+---
+
+## システム構成
+
+本システムは以下の要素で構成される。
+
+- Web サーバ  
+  - 閲覧用 Web UI  
+  - 管理者用 Web UI  
+- データベース  
+  - 教員・学生の属性情報  
+  - 対応状況データ
+- API  
+  - 末端の入力・発信機から送信される対応状況データを受信
+
+すべてのコンポーネントは **Docker / Docker Compose** 上で動作し，
+開発環境の差異を吸収する構成としている。
+
+---
+
+## 環境構築方法
+
+本リポジトリでは，**Docker Compose のみで環境構築が完結** するように設計している。  
+Python やライブラリをホスト環境に直接インストールする必要はない。
+
+### 必要環境
+
+- Docker
+- Docker Compose
+
+### 起動手順
+
+リポジトリを取得後，以下のコマンドを実行する。
+
+```bash
+docker-compose up --build
+
+## API 仕様（対応状況更新）
+
+### エンドポイント
+
+- **GET** `/api/status_update`
+
+### パラメータ
+
+| パラメータ名 | 内容 |
+|--------------|------|
+| `data` | `ID,状態` をカンマ区切りで指定（複数指定可） |
+
+- **ID**  
+  教員または学生を識別する ID  
+- **状態**  
+  - `1` ：対応可  
+  - `0` ：対応不可  
+
+---
+
+## 動作確認用テスト URL
+
+### 単体送信
+
+- **対応可**  
+  `http://localhost:5000/api/status_update?data=1,1`
+
+- **対応不可**  
+  `http://localhost:5000/api/status_update?data=1,0`
+
+### 複数人一括送信
+
+- **可・不可・可**  
+  `http://localhost:5000/api/status_update?data=1,1,2,0,3,1`
+
+### エラー系テスト
+
+- **未登録 ID を含む場合**  
+  `http://localhost:5000/api/status_update?data=1,1,999,0`
+
+- **フォーマットエラー（要素数不正）**  
+  `http://localhost:5000/api/status_update?data=1,1,2`
+
+- **ステータス不正値**  
+  `http://localhost:5000/api/status_update?data=1,2`
+
+---
+
+## 管理者機能
+
+管理者用サイトでは，以下の操作が可能である。
+
+- 教員・学生データの追加，編集，削除  
+- 対応状況の手動更新  
+- 末端機器から送信された対応状況データの反映確認  
 
 
-〇ファイル構成(予定)
-sensei-switch/
-├─ app/
-│  ├─ logs
-│  │  ├─ format_error.log
-│  │  ├─ unregistered_id.log
-│  │  └─status_change.log
-│  ├─ main.py
-│  ├─ handlers_status.py
-│  ├─ api_admin_logic.py
-│  ├─ db.py
-│  ├─ utils_log.py
-│  ├─ migrations/
-│  │   └─ init_db.py
-│  └─ templates/
-│       ├─ admin.html
-│       ├─ view.html
-│       ├─ css/
-│       │  └─ style.css
-│       └─ js/
-│          ├─ admin.js
-│          └─ view.js
-├─ .gitignore
-├─ Dockerfile
-├─ docker-compose.yml
-├─ entrypoint.sh
-└─ README.md
+---
 
+## 注意事項
 
-〇閲覧用ページでAPIが投げるデータ形式
-[
-  {
-    "name": "山田太郎",
-    "department": "情報工学科",
-    "grade": "3",
-    "role": "教授",
-    "room": "A101",
-    "status": "在室"
-  }
-]
+- 本システムは **演習・研究用途** を想定している。  
+- 実環境での運用に際しては，  
+  認証機構の導入，通信の暗号化，負荷対策などの追加実装が必要となる。  
+- 現在 API は GET リクエストを用いているが，  
+  今後の拡張により POST 方式への移行を検討している。
 
-〇対応状況テスト用
-・単体（可）
-http://localhost:5000/api/status_update?data=1,1
-・単体（不可）
-http://localhost:5000/api/status_update?data=1,0
-・複数人（可、不可、可）
-http://localhost:5000/api/status_update?data=1,1,2,0,3,1
-・未登録ID
-http://localhost:5000/api/status_update?data=1,1,999,0
-・フォーマットエラー
-http://localhost:5000/api/status_update?data=1,1,2
-・ステータス不正値
-http://localhost:5000/api/status_update?data=1,2
+---
 
+## ライセンス
 
-
-・追加API
-http://localhost:5000/api/admin?action=add&name=佐藤&department=理科&grade=2&role=副担任&room=202
-・削除API
-http://localhost:5000/api/admin?action=delete&person_id=4
+本リポジトリは教育目的で公開されている。
