@@ -66,6 +66,7 @@ Python やライブラリをホスト環境に直接インストールする必�
 
 ```bash
 docker-compose up --build
+```
 
 ## API 仕様（対応状況更新）
 
