@@ -68,7 +68,7 @@ def write_log_line(filename: str, line: str) -> None:
     # ★ 追加：必ずログディレクトリを初期化
     ensure_log_dir_exists()
 
-    log_dir = _get_log_dir()
+    log_dir = DEFAULT_LOG_DIR
     log_path = os.path.join(log_dir, filename)
 
     with open(log_path, "a", encoding="utf-8") as f:
