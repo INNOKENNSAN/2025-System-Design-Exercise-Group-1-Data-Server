@@ -10,7 +10,7 @@ jobs:
 
     env:
       NOTION_TOKEN: "${{ secrets.NOTION_TOKEN }}"
-      DATABASE_ID: "${{ secrets.DATABASE_ID }}"
+      DATABASE_ID: "${{ secrets.NOTION_DB_ID }}"
       ISSUE_TITLE: "${{ github.event.issue.title }}"
       ISSUE_URL: "${{ github.event.issue.html_url }}"
       ISSUE_STATE: "${{ github.event.issue.state }}"
