@@ -117,13 +117,7 @@ jobs:
                   ]
                 },
                 "IssueID": {
-                  "rich_text": [
-                    {
-                      "text": {
-                        "content": "'"${ISSUE_NUMBER}"'"
-                      }
-                    }
-                  ]
+                  "number": '"${ISSUE_NUMBER}"'
                 },
                 "URL": {
                   "url": "'"${ISSUE_URL}"'"
